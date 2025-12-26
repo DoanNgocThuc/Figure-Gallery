@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:figure_gallery/models/Post.dart';
 import 'package:flutter/material.dart';
 
 class PostCard extends StatefulWidget {
-  final QueryDocumentSnapshot post;
+  final Post post;
   const PostCard({super.key, required this.post});
 
   @override
@@ -15,11 +16,12 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> images = widget.post['images'];
-
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-      color: Color(0xFF1C1C1C),
+      decoration: BoxDecoration(
+        color: Color(0xFF1C1C1C),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,7 +32,7 @@ class _PostCardState extends State<PostCard> {
                 CircleAvatar(
                   backgroundColor: Colors.redAccent,
                   child: Text(
-                    widget.post['userEmail'][0].toUpperCase(),
+                    widget.post.userEmail.toUpperCase()[0],
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -39,7 +41,7 @@ class _PostCardState extends State<PostCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.post['figureName'],
+                      widget.post.figureName,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -47,7 +49,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                     Text(
-                      widget.post['userEmail'].split('@')[0],
+                      widget.post.userEmail.split('@')[0],
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
@@ -63,11 +65,11 @@ class _PostCardState extends State<PostCard> {
               child: Stack(
                 children: [
                   PageView.builder(
-                    itemCount: images.length,
+                    itemCount: widget.post.images.length,
                     onPageChanged: (idx) => setState(() => _currentIndex = idx),
                     itemBuilder: (ctx, i) {
                       return CachedNetworkImage(
-                        imageUrl: images[i],
+                        imageUrl: widget.post.images[i],
                         fit: BoxFit.contain,
 
                         placeholder: (c, u) => Center(
@@ -80,7 +82,7 @@ class _PostCardState extends State<PostCard> {
                       );
                     },
                   ),
-                  if (images.length > 1)
+                  if (widget.post.images.length > 1)
                     Positioned(
                       top: 10,
                       right: 10,
@@ -97,7 +99,7 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                         child: Text(
-                          "${_currentIndex + 1}/${images.length}",
+                          "${_currentIndex + 1}/${widget.post.images.length}",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -113,7 +115,7 @@ class _PostCardState extends State<PostCard> {
           Padding(
             padding: EdgeInsets.all(12),
             child: Text(
-              widget.post['description'],
+              widget.post.description,
               style: TextStyle(color: Colors.grey[300]),
             ),
           ),

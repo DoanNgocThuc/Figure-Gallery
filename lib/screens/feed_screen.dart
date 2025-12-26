@@ -1,3 +1,4 @@
+import 'package:figure_gallery/models/Post.dart';
 import 'package:figure_gallery/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,10 +22,11 @@ class FeedScreen extends StatelessWidget {
           }
 
           return ListView.builder(
-            padding: EdgeInsets.only(bottom: 80),
+            padding: EdgeInsets.only(bottom: 80, left: 10, right: 10),
+
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              var post = snapshot.data!.docs[index];
+              Post post = Post.fromFirestore(snapshot.data!.docs[index]);
 
               return TweenAnimationBuilder(
                 tween: Tween<double>(begin: 0, end: 1),
