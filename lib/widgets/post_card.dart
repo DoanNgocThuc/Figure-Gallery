@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figure_gallery/services/post_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/post_service.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   final Post post;

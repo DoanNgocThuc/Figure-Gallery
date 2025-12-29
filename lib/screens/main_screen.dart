@@ -56,14 +56,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: colorScheme.primary.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-        ),
+        decoration: BoxDecoration(border: Border(top: BorderSide(width: 1))),
 
         child: BottomAppBar(
           color: Color(0xFF1C1C1C),

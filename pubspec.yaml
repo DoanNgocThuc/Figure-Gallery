@@ -44,6 +44,8 @@ dependencies:
   flutter_riverpod: ^3.1.0
   crypto: ^3.0.7
   http: ^1.6.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -73,6 +75,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/logo.png
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -100,3 +103,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  color: "#1C1C1C" # Your app's background color (Black/Grey)
+  image: "assets/logo.png"
+  branding: "assets/logo.png" # Optional: Branding image for Android 12+
+  color_dark: "#000000" # Optional: Background color for dark mode
+  image_dark: "assets/logo.png" # Optional: Image for dark mode
+  android_12:
+    image: "assets/logo.png"
+    icon_background_color: "#1C1C1C"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21 # optional
