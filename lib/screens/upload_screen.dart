@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../services/cloudinary_service.dart';
+import '../services/post_service.dart';
 
-class UploadScreen extends StatefulWidget {
+class UploadScreen extends ConsumerStatefulWidget {
   const UploadScreen({super.key});
 
   @override
-  State<UploadScreen> createState() => _UploadScreenState();
+  ConsumerState<UploadScreen> createState() => _UploadScreenState();
 }
 
-class _UploadScreenState extends State<UploadScreen> {
+class _UploadScreenState extends ConsumerState<UploadScreen> {
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
   List<XFile> _images = [];
@@ -28,22 +28,31 @@ class _UploadScreenState extends State<UploadScreen> {
 
     setState(() => _isUploading = true);
 
-    // 1. Upload to Cloudinary
-    List<String> imageUrls = await CloudinaryService().uploadImages(_images);
+    try {
+      List<String> imageUrls = await CloudinaryService().uploadImages(_images);
+      await ref
+          .read(postServiceProvider)
+          .addPost(
+            figureName: _nameController.text,
+            description: _descController.text,
+            imageUrls: imageUrls,
+          );
 
-    // 2. Save Data to Firestore
-    User? user = FirebaseAuth.instance.currentUser;
-    await FirebaseFirestore.instance.collection('posts').add({
-      'figureName': _nameController.text,
-      'description': _descController.text,
-      'images': imageUrls,
-      'userId': user?.uid,
-      'userEmail': user?.email,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
-    setState(() => _isUploading = false);
-    Navigator.pop(context);
+      if (mounted) {
+        setState(() => _isUploading = false);
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isUploading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Upload failed: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -67,9 +76,20 @@ class _UploadScreenState extends State<UploadScreen> {
               onPressed: _pickImages,
               child: Text("Select Images (${_images.length})"),
             ),
+
+            // Image Preview (Optional but helpful)
+            if (_images.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  "${_images.length} images selected",
+                  style: TextStyle(color: Colors.green),
+                ),
+              ),
+
             SizedBox(height: 20),
             _isUploading
-                ? CircularProgressIndicator()
+                ? CircularProgressIndicator(color: Colors.redAccent)
                 : ElevatedButton(
                     onPressed: _submit,
                     child: Text("Post Gallery"),

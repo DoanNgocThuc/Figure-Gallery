@@ -22,6 +22,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -43,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
 
       body: _screens[_selectedIndex],
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: colorScheme.primary,
         elevation: 10,
         shape: CircleBorder(side: BorderSide(color: Colors.black, width: 3)),
         child: Icon(Icons.add_a_photo, color: Colors.white, size: 28),
@@ -57,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: Colors.redAccent.withValues(alpha: 0.3),
+              color: colorScheme.primary.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -83,6 +85,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildNavItem({required IconData icon, required int index}) {
+    final colorScheme = Theme.of(context).colorScheme;
     bool isSelected = _selectedIndex == index;
     return InkWell(
       onTap: () => _onItemTapped(index),
@@ -92,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Icon(
             icon,
-            color: isSelected ? Colors.redAccent : Colors.grey,
+            color: isSelected ? colorScheme.primary : Colors.grey,
             size: isSelected ? 30 : 24,
           ),
           SizedBox(height: 4),

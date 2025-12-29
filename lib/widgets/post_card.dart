@@ -1,21 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:figure_gallery/models/Post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:figure_gallery/services/post_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../services/post_service.dart';
 
-class PostCard extends StatefulWidget {
+class PostCard extends ConsumerStatefulWidget {
   final Post post;
   const PostCard({super.key, required this.post});
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  ConsumerState<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostCardState extends ConsumerState<PostCard> {
   int _currentIndex = 0;
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+  bool get isLiked =>
+      currentUser != null && widget.post.upvotes.contains(currentUser?.uid);
+  int get likeCount => widget.post.upvotes.length;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final int likeCount = widget.post.upvotes.length;
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
       decoration: BoxDecoration(
@@ -30,7 +41,7 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: colorScheme.primary,
                   child: Text(
                     widget.post.userEmail.toUpperCase()[0],
                     style: TextStyle(color: Colors.white),
@@ -74,7 +85,7 @@ class _PostCardState extends State<PostCard> {
 
                         placeholder: (c, u) => Center(
                           child: CircularProgressIndicator(
-                            color: Colors.redAccent,
+                            color: colorScheme.primary,
                           ),
                         ),
                         errorWidget: (context, url, error) =>
@@ -95,7 +106,7 @@ class _PostCardState extends State<PostCard> {
                           color: Colors.black.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Colors.redAccent.withValues(alpha: 0.5),
+                            color: colorScheme.primary.withValues(alpha: 0.5),
                           ),
                         ),
                         child: Text(
@@ -109,6 +120,33 @@ class _PostCardState extends State<PostCard> {
                     ),
                 ],
               ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.redAccent : Colors.grey,
+                    size: 28,
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(postServiceProvider)
+                        .toggleUpvote(widget.post.id, widget.post.upvotes);
+                  },
+                ),
+                Text(
+                  "$likeCount likes",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
 

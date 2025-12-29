@@ -8,6 +8,7 @@ class Post {
   final String description;
   final List<String> images;
   final DateTime timestamp;
+  final List<String> upvotes;
 
   Post({
     required this.id,
@@ -17,6 +18,7 @@ class Post {
     required this.figureName,
     required this.timestamp,
     required this.images,
+    required this.upvotes,
   });
 
   factory Post.fromFirestore(DocumentSnapshot doc) {
@@ -30,6 +32,7 @@ class Post {
       figureName: data['figureName'] ?? '',
       images: List<String>.from(data['images'] ?? []),
       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      upvotes: List<String>.from(data['upvotes'] ?? []),
     );
   }
 }

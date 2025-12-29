@@ -63,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -76,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen>
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.redAccent, width: 3),
+                    border: Border.all(color: colorScheme.primary, width: 3),
                   ),
                   child: Icon(
                     Icons.camera_alt,
                     size: 60,
-                    color: Colors.redAccent,
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
@@ -105,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen>
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "Email",
-                  prefixIcon: Icon(Icons.email, color: Colors.redAccent),
+                  prefixIcon: Icon(Icons.email, color: colorScheme.primary),
                 ),
               ),
               SizedBox(height: 15),
@@ -114,14 +116,14 @@ class _LoginScreenState extends State<LoginScreen>
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "Password",
-                  prefixIcon: Icon(Icons.lock, color: Colors.redAccent),
+                  prefixIcon: Icon(Icons.lock, color: colorScheme.primary),
                 ),
                 obscureText: true,
               ),
               SizedBox(height: 30),
 
               if (_isLoading)
-                CircularProgressIndicator(color: Colors.redAccent)
+                CircularProgressIndicator(color: colorScheme.primary)
               else
                 Column(
                   children: [

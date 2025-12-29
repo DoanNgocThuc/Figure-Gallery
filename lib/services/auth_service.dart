@@ -45,4 +45,14 @@ class AuthService {
       return '';
     }
   }
+
+  Future<User?> getCurrentUser() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user;
+    } else {
+      debugPrint("Can't get current User");
+      return null;
+    }
+  }
 }
