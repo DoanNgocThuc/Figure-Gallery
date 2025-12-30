@@ -1,5 +1,5 @@
 import 'package:figure_gallery/services/post_service.dart';
-import 'package:figure_gallery/widgets/post_card.dart';
+import 'package:figure_gallery/widgets/feed/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

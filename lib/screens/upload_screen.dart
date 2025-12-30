@@ -61,40 +61,42 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       appBar: AppBar(title: Text("Upload Pose")),
       body: Padding(
         padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: "Figure Name"),
-            ),
-            TextField(
-              controller: _descController,
-              decoration: InputDecoration(labelText: "Description"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickImages,
-              child: Text("Select Images (${_images.length})"),
-            ),
-
-            // Image Preview (Optional but helpful)
-            if (_images.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  "${_images.length} images selected",
-                  style: TextStyle(color: Colors.green),
-                ),
+        child: Center(
+          child: Column(
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: "Figure Name"),
+              ),
+              TextField(
+                controller: _descController,
+                decoration: InputDecoration(labelText: "Description"),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _pickImages,
+                child: Text("Select Images (${_images.length})"),
               ),
 
-            SizedBox(height: 20),
-            _isUploading
-                ? CircularProgressIndicator(color: Colors.redAccent)
-                : ElevatedButton(
-                    onPressed: _submit,
-                    child: Text("Post Gallery"),
+              // Image Preview (Optional but helpful)
+              if (_images.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "${_images.length} images selected",
+                    style: TextStyle(color: Colors.green),
                   ),
-          ],
+                ),
+
+              SizedBox(height: 20),
+              _isUploading
+                  ? CircularProgressIndicator(color: Colors.redAccent)
+                  : ElevatedButton(
+                      onPressed: _submit,
+                      child: Text("Post Gallery"),
+                    ),
+            ],
+          ),
         ),
       ),
     );
