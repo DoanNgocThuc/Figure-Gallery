@@ -63,11 +63,13 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         padding: EdgeInsets.all(16),
         child: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(labelText: "Figure Name"),
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _descController,
                 decoration: InputDecoration(labelText: "Description"),

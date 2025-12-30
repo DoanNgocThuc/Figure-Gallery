@@ -54,6 +54,14 @@ class PostService {
         });
   }
 
+  Stream<Post> getPostStream(String postId) {
+    return _firestore
+        .collection('posts')
+        .doc(postId)
+        .snapshots()
+        .map((doc) => Post.fromFirestore(doc));
+  }
+
   // --- WRITES ---
   Future<void> toggleUpvote(String postId, List<String> currentUpvotes) async {
     final uid = _currentUserId;
