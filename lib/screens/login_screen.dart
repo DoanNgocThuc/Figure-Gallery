@@ -1,19 +1,18 @@
-import 'package:figure_gallery/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../viewmodels/auth_viewmodel.dart'; // Import ViewModel
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  final _authService = AuthService();
 
   late AnimationController _animController;
   late Animation<double> _scaleAnimation;
@@ -35,35 +34,37 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _animController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _authAction({required bool isLogin}) async {
-    setState(() => _isLoading = true);
-    try {
-      if (isLogin) {
-        await _authService.loginWithEmailAndPassword(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
+  void _submit({required bool isLogin}) {
+    ref
+        .read(authViewModelProvider.notifier)
+        .authenticate(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+          isLogin: isLogin,
         );
-      } else {
-        await _authService.signUpWithEmailAndPassword(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
-      );
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    ref.listen(authViewModelProvider, (previous, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+    final authState = ref.watch(authViewModelProvider);
+    final isLoading = authState.isLoading;
 
     return Scaffold(
       body: Center(
@@ -122,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen>
               ),
               SizedBox(height: 30),
 
-              if (_isLoading)
+              if (isLoading)
                 CircularProgressIndicator(color: colorScheme.primary)
               else
                 Column(
@@ -130,13 +131,13 @@ class _LoginScreenState extends State<LoginScreen>
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () => _authAction(isLogin: true),
+                        onPressed: () => _submit(isLogin: true),
                         child: Text("LOGIN"),
                       ),
                     ),
                     SizedBox(height: 10),
                     TextButton(
-                      onPressed: () => _authAction(isLogin: false),
+                      onPressed: () => _submit(isLogin: false),
                       child: Text(
                         "Create Account",
                         style: TextStyle(color: Colors.grey),

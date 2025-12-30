@@ -1,8 +1,8 @@
-import 'package:figure_gallery/models/Post.dart';
-import 'package:figure_gallery/services/post_service.dart';
 import 'package:figure_gallery/widgets/feed/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/Post.dart';
+import '../viewmodels/post_detail_viewmodel.dart'; // Import the new ViewModel
 
 class PostDetailScreen extends ConsumerWidget {
   final Post post;
@@ -11,23 +11,23 @@ class PostDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postStream = ref.watch(postServiceProvider).getPostStream(post.id);
+    final postAsync = ref.watch(postDetailProvider(post.id));
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(title: Text(post.figureName)),
-      body: StreamBuilder<Post>(
-        stream: postStream,
-        initialData: post,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return SingleChildScrollView(child: PostCard(post: snapshot.data!));
-          }
-
-          return Center(
-            child: CircularProgressIndicator(color: Colors.redAccent),
-          );
+      body: postAsync.when(
+        data: (livePost) {
+          return SingleChildScrollView(child: PostCard(post: livePost));
         },
+
+        loading: () {
+          return SingleChildScrollView(child: PostCard(post: post));
+        },
+
+        error: (err, stack) => Center(
+          child: Text("Error: $err", style: TextStyle(color: Colors.red)),
+        ),
       ),
     );
   }

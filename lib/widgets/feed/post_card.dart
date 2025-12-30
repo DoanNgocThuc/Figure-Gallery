@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:figure_gallery/models/Post.dart';
+import 'package:figure_gallery/viewmodels/post_action_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:figure_gallery/services/post_service.dart';
@@ -133,9 +134,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                     size: 28,
                   ),
                   onPressed: () {
-                    ref
-                        .read(postServiceProvider)
-                        .toggleUpvote(widget.post.id, widget.post.upvotes);
+                    PostActionViewModel(
+                      ref,
+                    ).toggleUpvote(widget.post.id, widget.post.upvotes);
                   },
                 ),
                 Text(
