@@ -1,4 +1,4 @@
-import 'package:figure_gallery/services/post_service.dart';
+import 'package:figure_gallery/viewmodels/feed_viewmodel.dart';
 import 'package:figure_gallery/widgets/feed/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +8,7 @@ class FeedScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final feedAsyncValue = ref.watch(feedProvider);
+    final feedAsyncValue = ref.watch(feedViewModelProvider);
 
     return feedAsyncValue.when(
       data: (posts) {
@@ -21,7 +21,9 @@ class FeedScreen extends ConsumerWidget {
           padding: EdgeInsets.only(bottom: 100),
           itemCount: posts.length,
           itemBuilder: (context, index) {
-            return PostCard(post: posts[index]);
+            final post = posts[index];
+
+            return PostCard(key: ValueKey(post.id), post: post);
           },
         );
       },

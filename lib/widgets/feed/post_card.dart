@@ -3,7 +3,6 @@ import 'package:figure_gallery/models/Post.dart';
 import 'package:figure_gallery/viewmodels/post_action_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:figure_gallery/services/post_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PostCard extends ConsumerStatefulWidget {
